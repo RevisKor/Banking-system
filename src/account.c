@@ -28,7 +28,11 @@ int get_username(Bank *bank, char **user_account) {
             
                 // the username has been found
                 if (strcmp(username, bank->accounts[index].username) == 0) {
-                    // TODO: implement sign_in logic to ask the user for the password of that account
+                    
+                    if(!sign_in(bank->accounts[index].password)) {
+                        *user_account = bank->accounts[index].username;
+                        return 0;
+                    }
             }
         }
 

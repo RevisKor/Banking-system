@@ -19,7 +19,7 @@ int load_data(const char *file, Bank *bank) {
 
         // check if our Account array in the bank can hold the data
         if (bank->count >= bank->capacity) {
-            if (reallocate_accounts(&bank)) {
+            if (reallocate_accounts(bank)) {
                 fclose(data);
                 return 2;           // TODO: issue error status ex. MEMMORY_ALLOCATION_ISSUE
             }
