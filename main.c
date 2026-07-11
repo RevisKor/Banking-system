@@ -5,7 +5,7 @@
 
 int main() {
     char *user = NULL;
-    int choice, is_logged_in = 0;
+    int choice, is_logged_in = 0, login_attempts = 1;
 
     // initialize the bank structure
     Bank bank = {   .accounts = NULL, 
@@ -29,8 +29,20 @@ int main() {
     while (!is_logged_in) {
 
         // display the login menu and ask the user what action they wanna take
-        display_menu_login();
-        scanf("%d", &choice);
+        display_menu_login(login_attempts);
+
+        // Check if scanf successfully read an integer
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Please enter a number.\n");
+            sleep(ONE_SECOND);
+            
+            // Clear the invalid characters from the input buffer
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+            
+            login_attempts++;
+            continue; // Skip the switch statement and restart the loop
+        }
 
         // take action 
         switch (choice) {
@@ -38,7 +50,6 @@ int main() {
 
                     // if get_username return success enter the account and go to its logic
                     if (login_menu_option == 0) {
-                        display_menu_account(user);
                         is_logged_in = 1;
                         break;
 
@@ -63,10 +74,10 @@ int main() {
 
             default: 
                     printf("Invalid input please try again\n");
+                    sleep(ONE_SECOND);
+                    login_attempts++;
                     break;
-        }
-
-        
+        }  
     }
 
     while (is_logged_in) {

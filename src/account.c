@@ -1,8 +1,10 @@
 // import the header file
 #include "../include/account.h"
 
-void display_menu_login() {
-    printf("Hello and welcome to our Bank\n");
+void display_menu_login(int count) {
+    if (count <= 1) {
+        printf("Hello and welcome to our Bank\n");
+    }
     sleep(ONE_SECOND);
     printf("===== Account MANAGEMENT =====\n");
     printf("1. Log in\n");

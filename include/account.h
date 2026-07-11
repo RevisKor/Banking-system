@@ -29,7 +29,7 @@ typedef struct {
 // prototype
 int get_username(Bank *bank, char **user_account);
 int sign_in(char *password);
-void display_menu_login();
+void display_menu_login(int count);
 void display_menu_account(char *username);
 
 
