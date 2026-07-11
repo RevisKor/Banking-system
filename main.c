@@ -62,8 +62,15 @@ int main() {
                     /*  note the there is another option which it return 2 
                         in that case it just goes on and executes the next case 
                         which will be create_account() logic  */}
+                    /* fallthrough */
 
-            case 2: // create_account()
+            case 2: if(create_account(&bank)) {
+                        return 1;
+                    };
+                    
+                    printf("Logging in ...\n");
+                    sleep(ONE_SECOND);
+
                     break;
 
             case 3: printf("Thank you for banking with us!\n");
@@ -93,5 +100,6 @@ int main() {
                 break;
         }
     }
+
     return 0;
 }
