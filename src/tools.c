@@ -5,9 +5,9 @@ int load_data(const char *file, Bank *bank) {
     // load in the file in read mode
     FILE *data = fopen(file, "r");
 
-    // check if there is an account file if noto then terminate the program
+    // check if there is an account file if not then terminate the program
     if (!data) {
-        printf("No existing file found. Starting with empty store.\n");
+        printf("No existing file found\n");
         return 1;
     }
 
@@ -32,6 +32,8 @@ int load_data(const char *file, Bank *bank) {
         bank->count++;
 
     }
+
+    return 0;
 }
 
 
