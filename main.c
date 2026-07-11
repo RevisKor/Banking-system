@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/account.h"
-#include "include/tools.h"
+#include "account.h"
+#include "tools.h"
+#include "auth.h"
+#include "ui.h"
 
 int main() {
     char *user = NULL;
@@ -67,7 +69,7 @@ int main() {
             case 2: if(create_account(&bank)) {
                         return 1;
                     };
-                    
+
                     printf("Logging in ...\n");
                     sleep(ONE_SECOND);
 

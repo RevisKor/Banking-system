@@ -1,5 +1,5 @@
 // import the header file
-#include "../include/tools.h"
+#include "tools.h"
 
 int load_data(const char *file, Bank *bank) {
     // load in the file in read mode
@@ -38,25 +38,40 @@ int load_data(const char *file, Bank *bank) {
 
 
 int reallocate_accounts(Bank *bank) {
-    bank->capacity *= 2;            // double the space 
-    
-    // reallocate new memory from the bigger array
-    Account *tmp_arr = realloc(bank->accounts, bank-> capacity * sizeof(Account));
+    bank->capacity *= 2;
 
-    // if there is no memory available then terminate
+    Account *tmp_arr = realloc(bank->accounts, bank->capacity * sizeof(Account));
+
     if (tmp_arr == NULL) {
         printf("Memory Allocation failed ...\n");
         sleep(ONE_SECOND);
-        printf("Terminating");
+        printf("Terminating\n");
 
-        free (bank->accounts);      // free to avoid problems
+        free(bank->accounts);
 
-        return 1;                   // memmory alloc issue
+        return 1;
     }
 
-    // space was found assign the new location to Accounts array
     bank->accounts = tmp_arr;
     return 0;
+}
 
-        
+int add_account_to_database(const char *file, const Account *account) {
+    FILE *data = fopen(file, "a");
+
+    if (data == NULL) {
+        printf("Loading file failed ...\n");
+        sleep(ONE_SECOND);
+        printf("Terminating\n");
+        return 1;
+    }
+
+    if (fprintf(data, "%d %s %s %.2f\n", account->ID, account->username, account->password, account->balance) < 0) {
+        printf("Failed to write account to database\n");
+        fclose(data);
+        return 1;
+    }
+
+    fclose(data);
+    return 0;
 }

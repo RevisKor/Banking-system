@@ -1,19 +1,12 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-// standard imports
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-
+// Shared bank/account type definitions.
 #include "account.h"
 
-// constants
-#define ONE_SECOND 1
-
-// prototypes
+// Persistence and account-database helper API.
 int load_data(const char *file, Bank *bank);
 int reallocate_accounts(Bank *bank);
+int add_account_to_database(const char *file, const Account *account);
 
 #endif
