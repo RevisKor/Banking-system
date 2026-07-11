@@ -30,4 +30,6 @@ typedef struct {
 int get_username(Bank *bank, char **user_account);
 void display_menu_login();
 void display_menu_account(char *username);
+
+
 #endif
