@@ -36,7 +36,6 @@ int load_data(const char *file, Bank *bank) {
     return 0;
 }
 
-
 int reallocate_accounts(Bank *bank) {
     bank->capacity *= 2;
 
@@ -66,7 +65,12 @@ int add_account_to_database(const char *file, const Account *account) {
         return 1;
     }
 
-    if (fprintf(data, "%d %s %s %.2f\n", account->ID, account->username, account->password, account->balance) < 0) {
+    if (fprintf(data, "%d %s %s %.2f\n", 
+        account->ID, 
+        account->username, 
+        account->password, 
+        account->balance) < 0) {
+
         printf("Failed to write account to database\n");
         fclose(data);
         return 1;
@@ -74,4 +78,30 @@ int add_account_to_database(const char *file, const Account *account) {
 
     fclose(data);
     return 0;
+}
+
+void update_data(Bank *bank, const char *file) {
+
+    // open the file and load it in write mode
+    FILE *data = fopen(file, "w");
+
+    // check that the file exists
+    if (data == NULL) {
+        printf("could not update the database file\n");
+        sleep(ONE_SECOND);
+        printf("Terminating");
+        return;
+    }
+
+    // write the new data
+    for (int index = 0; index < bank->count; index++) {
+        fprintf(data, "%d %s %s %.2f\n", 
+            bank->accounts[index].ID,
+            bank->accounts[index].username,
+            bank->accounts[index].password,
+            bank->accounts[index].balance);
+    }
+
+    fclose(data);
+
 }

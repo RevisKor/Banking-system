@@ -5,7 +5,7 @@
 #include "account.h"
 
 // Authentication and password-validation API.
-int get_username(Bank *bank, char **user_account);
+int get_username(Bank *bank, Account **user);
 int sign_in(char *password);
 void check_length(const char *prompt, const char *id, char **checked, int min_len, int max_len);
 int validate_password(const char *password);

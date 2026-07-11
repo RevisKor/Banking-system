@@ -8,5 +8,6 @@
 int load_data(const char *file, Bank *bank);
 int reallocate_accounts(Bank *bank);
 int add_account_to_database(const char *file, const Account *account);
+void update_data(Bank *bank, const char *file);
 
 #endif

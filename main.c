@@ -4,9 +4,10 @@
 #include "tools.h"
 #include "auth.h"
 #include "ui.h"
+#include "transactions.h"
 
 int main() {
-    char *user = NULL;
+    Account *user = NULL;
     int choice, is_logged_in = 0, login_attempts = 1;
 
     // initialize the bank structure
@@ -89,15 +90,29 @@ int main() {
         }  
     }
 
+
     while (is_logged_in) {
-        display_menu_account(user);
+        display_menu_account(user->username);
         scanf("%d", &choice);
 
         switch(choice) {
+            case 1: display_balance(*user);
+                    break;
+
+            case 2: withdraw(user);
+                    break;
+
+            case 3: deposit(user);
+                    break;
+
             case 4:
+                sleep(ONE_SECOND);
                 printf("Thank you for banking with us!\n");
+                update_data(&bank, ACCOUNTS_DATA);
                 return 0;
+                
             default:
+                sleep(ONE_SECOND);
                 printf("Invalid input please try again\n");
                 break;
         }

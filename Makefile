@@ -1,7 +1,7 @@
 all: app
 
-app: main.o account.o auth.o tools.o ui.o
-	gcc main.o account.o auth.o tools.o ui.o -o app
+app: main.o account.o auth.o tools.o ui.o transactions.o
+	gcc main.o account.o auth.o tools.o ui.o transactions.o -o app
 
 main.o: main.c
 	gcc -Wall -Wextra -Iinclude -g -c main.c -o main.o
@@ -17,6 +17,9 @@ tools.o: src/tools.c
 
 ui.o: src/ui.c
 	gcc -Wall -Wextra -Iinclude -g -c src/ui.c -o ui.o
+
+transactions.o:	src/transactions.c
+	gcc -Wall -Wextra -Iinclude -g -c src/transactions.c transactions.o
 
 rebuild:
 	make clean

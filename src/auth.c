@@ -2,7 +2,7 @@
 #include "auth.h"
 
 
-int get_username(Bank *bank, char **user_account) {
+int get_username(Bank *bank, Account **user) {
     char username[50];
     int is_user = 0, attempts = 3;
 
@@ -21,7 +21,7 @@ int get_username(Bank *bank, char **user_account) {
             if (strcmp(username, bank->accounts[index].username) == 0) {
 
                 if (!sign_in(bank->accounts[index].password)) {
-                    *user_account = bank->accounts[index].username;
+                    *user = &(bank->accounts[index]);
                     return 0;
                 }
             }
