@@ -14,6 +14,13 @@ int get_username(Bank *bank, Account **user) {
         printf("Enter you username: ");     // prompt the user to enter their username
         scanf("%49s", username);
 
+        // TODO:
+        // if (strcmp(username, admin_hash) == 0) {
+        //     char *password;
+        //     printf("Enter the admin password: ");
+        //     scanf("%s", )
+        // }
+
         // search for the username in the database
         for (int index = 0; index < bank->count; index++) {
 
@@ -50,6 +57,7 @@ int get_username(Bank *bank, Account **user) {
 
 int sign_in(char *password) {
     int attempts = 3, is_logged_in = 0;
+    char hash[65] = {0};
 
     // gives 3 attempts to enter password before terminating
     while (attempts > 0 && !is_logged_in) {
@@ -59,8 +67,9 @@ int sign_in(char *password) {
         printf("Please Enter the account password: ");
         scanf("%49s", input);
 
-        // check if the input_password = the password linked to the account
-        if (strcmp(input, password) == 0) {
+        // check if the input_password = the hash linked to the account
+        hash_password(input, hash);
+        if (strcmp(hash, password) == 0) {
             is_logged_in = 1;
         }
     }
@@ -82,20 +91,26 @@ int sign_in(char *password) {
 
 void check_length(const char *prompt, const char *id, char **checked, int min_len, int max_len) {
     char tmp[256] = "";
+    char hash[65] = {0};
     int is_valid = 0;
 
     do {
         // prompt the user for a username
         printf("%s", prompt);
-        if (scanf("%255s", tmp) != 1) {
+
+        if (scanf(" %255s", tmp) != 1) {
             int c;
-            while ((c = getchar()) != '\n' && c != EOF) {
-            }
+            while ((c = getchar()) != '\n' && c != EOF);
+            
             printf("Invalid input. Please try again.\n");
             sleep(ONE_SECOND);
             continue;
         }
 
+        // Clean up the leftover newline manually so the NEXT loop turn is clean
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);  
+          
         int len = strlen(tmp);
 
         // check if the id meets the criteria and gives feedback
@@ -120,15 +135,25 @@ void check_length(const char *prompt, const char *id, char **checked, int min_le
             sleep(ONE_SECOND);
             continue;
         }
+        
+        if (strcmp(id, "password") == 0) {
+
+            // hash the password
+            hash_password(tmp, hash);
+        }
 
         // survived all the check
         is_valid = 1;
-    } while (!is_valid);
 
-    // allocate memory for the output checked string
-    *checked = malloc(strlen(tmp) + 1);
-    if (*checked != NULL) {
-        strcpy(*checked, tmp);
+    } while (!is_valid);
+    
+    if (strcmp(id, "password") == 0) {
+        strcpy(*checked, hash);
+        return;
+
+    } else {
+        strcpy(*checked, tmp); 
+        return;
     }
 }
 
