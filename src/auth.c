@@ -1,6 +1,7 @@
 // import the header file
 #include "auth.h"
 
+char message[512] = "";
 
 int get_username(Bank *bank, Account **user) {
     char username[50];
@@ -91,7 +92,6 @@ int sign_in(char *password) {
 
 void check_length(const char *prompt, const char *id, char **checked, int min_len, int max_len) {
     char tmp[256] = "";
-    char hash[65] = {0};
     int is_valid = 0;
 
     do {
@@ -136,25 +136,13 @@ void check_length(const char *prompt, const char *id, char **checked, int min_le
             continue;
         }
         
-        if (strcmp(id, "password") == 0) {
-
-            // hash the password
-            hash_password(tmp, hash);
-        }
-
         // survived all the check
         is_valid = 1;
 
     } while (!is_valid);
     
-    if (strcmp(id, "password") == 0) {
-        strcpy(*checked, hash);
-        return;
-
-    } else {
-        strcpy(*checked, tmp); 
-        return;
-    }
+    strcpy(*checked, tmp);
+    return;
 }
 
 int validate_password(const char *password) {

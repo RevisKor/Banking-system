@@ -33,6 +33,11 @@ int create_account(Bank *bank) {
     // get the user's valid password
     check_length("Enter you desired Password: ", "password", &password_ptr, 8, 16);
 
+    char hashed_password[65] = {0};
+    hash_password(password_ptr, hashed_password);
+
+    snprintf(message, sizeof(message), "Username: %s\nPassword: %s\n", username_ptr, password_ptr);
+
     // check if there is space for the new account in bank
     if (bank->count >= bank->capacity) {
         bank->capacity *= 2;
@@ -56,14 +61,19 @@ int create_account(Bank *bank) {
     bank->count++;
 
     bank->accounts[idx].ID = idx + 1000;        // init the ID of the user
-    bank->accounts[idx].balance = 0.0f;    
-         // init the balance of the user
-    printf("%s", username_ptr);
-    printf("%s", password_ptr);
+    bank->accounts[idx].balance = 0.0f;         // init the balance of the user
+        
     // init the username /password of the user
     snprintf(bank->accounts[idx].username, sizeof(bank->accounts[idx].username), "%s", username_ptr);
-    snprintf(bank->accounts[idx].password, sizeof(bank->accounts[idx].password), "%s", password_ptr);
+    snprintf(bank->accounts[idx].password, sizeof(bank->accounts[idx].password), "%s", hashed_password);
     
+    // show the user their details
+    printf("%s", message);
+    printf("These are your Username and Password, memorise them and don't share them\n");
+    sleep(ONE_SECOND);
+    printf("Press any key to continue ");
+    getchar();
+
     // add the account to the database
     if (add_account_to_database(ACCOUNTS_DATA, &(bank->accounts[idx])) != 0) {
         return 1;

@@ -32,7 +32,6 @@ int main() {
         return 1; 
     }
 
-    printf("got out of run_auth");
     // go to the account menu loop if they logged in
     if (is_logged_in) {
         run_user_session_loop(&bank, user);
@@ -108,20 +107,8 @@ int run_authentication_loop(Bank *bank, Account **user) {
                 printf("Exiting to login screen ...\n");
                 sleep(ONE_SECOND);
 
-                // check if data is curropted
-                printf("\n===== All Registered Accounts =====\n");
-                for (int index = 0; index < bank->count; index++) {
-                    printf("Account [%d]:\n", index);
-                    printf("  ID:      %d\n", bank->accounts[index].ID);
-                    printf("  User:    %s\n", bank->accounts[index].username);
-                    printf("  Hash:    %s\n", bank->accounts[index].password);
-                    printf("  Balance: $%.2f\n", bank->accounts[index].balance);
-                    printf("-----------------------------------\n");
-                }
-
                 update_data(bank, ACCOUNTS_DATA);
-                
-                return 1;
+
                 break;
 
             case 3: 
