@@ -3,6 +3,7 @@
 
 // Shared bank/account type definitions.
 #include "account.h"
+#include "hash.h"
 
 // Authentication and password-validation API.
 int get_username(Bank *bank, Account **user);

@@ -1,25 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h> 
 #include "account.h"
 #include "tools.h"
 #include "auth.h"
 #include "ui.h"
 #include "transactions.h"
 
+int init_bank_system(Bank *bank);
+int run_authentication_loop(Bank *bank, Account **user);
+void run_user_session_loop(Bank *bank, Account *user);
+
 int main() {
     Account *user = NULL;
-    int choice, is_logged_in = 0, login_attempts = 1;
-
+    
     // initialize the bank structure
-    Bank bank = {   .accounts = NULL, 
-                    .count = 0, 
-                    .capacity = INITIAL_CAPACITY };
+    Bank bank = { .accounts = NULL, 
+                  .count = 0, 
+                  .capacity = INITIAL_CAPACITY };
 
+    // setup memory and load database
+    if (init_bank_system(&bank) != 0) {
+        return 1;
+    }
+
+    // run gateway logic for login or registration
+    int is_logged_in = run_authentication_loop(&bank, &user);
+    if (is_logged_in == -1) {
+        return 0; 
+    } else if (is_logged_in == -2) {
+        return 1; 
+    }
+
+    printf("got out of run_auth");
+    // go to the account menu loop if they logged in
+    if (is_logged_in) {
+        run_user_session_loop(&bank, user);
+    }
+
+    return 0;
+}
+
+int init_bank_system(Bank *bank) {
     // initialize account array
-    bank.accounts = malloc(bank.capacity * sizeof(Account));                    
+    bank->accounts = malloc(bank->capacity * sizeof(Account));                    
 
-    // check if memmory was allocated
-    if (bank.accounts == NULL) {
+    // check if memory was allocated
+    if (bank->accounts == NULL) {
         printf("Memmory allocation failed ...\n");
         sleep(ONE_SECOND);
         printf("terminating\n");
@@ -27,89 +54,117 @@ int main() {
     }
 
     // load the data into our bank
-    if (load_data(ACCOUNTS_DATA, &bank)) {return 1;}
+    if (load_data(ACCOUNTS_DATA, bank)) {
+        return 1;
+    }
+    
+    return 0;
+}
 
-    while (!is_logged_in) {
+int run_authentication_loop(Bank *bank, Account **user) {
+    int choice;
+    int login_attempts = 1;
 
+    while (1) {
         // display the login menu and ask the user what action they wanna take
         display_menu_login(login_attempts);
 
-        // Check if scanf successfully read an integer
+        // check if scanf successfully read an integer
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input! Please enter a number.\n");
             sleep(ONE_SECOND);
             
-            // Clear the invalid characters from the input buffer
+            // clear the invalid characters from the input buffer
             int c;
             while ((c = getchar()) != '\n' && c != EOF);
             
             login_attempts++;
-            continue; // Skip the switch statement and restart the loop
+            continue; 
         }
 
-        // take action 
+        // take action
         switch (choice) {
-            case 1: {int login_menu_option = get_username(&bank, &user);
+            case 1: {
+                int login_menu_option = get_username(bank, user);
 
-                    // if get_username return success enter the account and go to its logic
-                    if (login_menu_option == 0) {
-                        is_logged_in = 1;
-                        break;
+                // if get_username return success enter the account and go to its logic
+                if (login_menu_option == 0) {
+                    return 1; 
+                } else if (login_menu_option == 1) {
+                    return -1; 
+                }
+                // note that option 2 falls through directly to create_account logic
+            }
 
-                    // if get_username return 1 then we should terminate the program
-                    } else if (login_menu_option == 1) {
-                        return 0;
-                        break;
-                    }
+            /* fallthrough */
 
-                    /*  note the there is another option which it return 2 
-                        in that case it just goes on and executes the next case 
-                        which will be create_account() logic  */}
-                    /* fallthrough */
+            case 2: 
+                if (create_account(bank)) {
+                    return -2; 
+                }
 
-            case 2: if(create_account(&bank)) {
-                        return 1;
-                    };
+                printf("Account created! ...\n");
+                sleep(ONE_SECOND);
+                printf("Exiting to login screen ...\n");
+                sleep(ONE_SECOND);
 
-                    printf("Logging in ...\n");
-                    sleep(ONE_SECOND);
+                // check if data is curropted
+                printf("\n===== All Registered Accounts =====\n");
+                for (int index = 0; index < bank->count; index++) {
+                    printf("Account [%d]:\n", index);
+                    printf("  ID:      %d\n", bank->accounts[index].ID);
+                    printf("  User:    %s\n", bank->accounts[index].username);
+                    printf("  Hash:    %s\n", bank->accounts[index].password);
+                    printf("  Balance: $%.2f\n", bank->accounts[index].balance);
+                    printf("-----------------------------------\n");
+                }
 
-                    break;
+                update_data(bank, ACCOUNTS_DATA);
+                
+                return 1;
+                break;
 
-            case 3: printf("Thank you for banking with us!\n");
-                    printf("Exiting ...");
-                    sleep(ONE_SECOND);
-
-                    return 0;
+            case 3: 
+                printf("Thank you for banking with us!\n");
+                printf("Exiting ...");
+                sleep(ONE_SECOND);
+                return -1;
 
             default: 
-                    printf("Invalid input please try again\n");
-                    sleep(ONE_SECOND);
-                    login_attempts++;
-                    break;
+                printf("Invalid input please try again\n");
+                sleep(ONE_SECOND);
+                login_attempts++;
+                break;
         }  
     }
+}
 
+void run_user_session_loop(Bank *bank, Account *user) {
+    int choice;
 
-    while (is_logged_in) {
+    while (1) {
         display_menu_account(user->username);
         scanf("%d", &choice);
 
         switch(choice) {
-            case 1: display_balance(*user);
-                    break;
+            case 1: 
+                display_balance(*user);
+                break;
 
-            case 2: withdraw(user);
-                    break;
+            case 2: 
+                withdraw(user);
+                break;
 
-            case 3: deposit(user);
-                    break;
+            case 3: 
+                deposit(user);
+                break;
 
             case 4:
                 sleep(ONE_SECOND);
                 printf("Thank you for banking with us!\n");
-                update_data(&bank, ACCOUNTS_DATA);
-                return 0;
+                // rewrite everything to the file when closing the app
+                update_data(bank, ACCOUNTS_DATA);
+                return; 
                 
             default:
                 sleep(ONE_SECOND);
@@ -117,6 +172,4 @@ int main() {
                 break;
         }
     }
-
-    return 0;
 }

@@ -15,7 +15,7 @@ int load_data(const char *file, Bank *bank) {
     Account tmp_account;
 
     // scan the file till we hit the end of the file
-    while(fscanf(data, "%d %49s %19s %f", &tmp_account.ID, tmp_account.username, tmp_account.password, &tmp_account.balance) == 4) {
+    while(fscanf(data, "%d %49s %64s %f", &tmp_account.ID, tmp_account.username, tmp_account.password, &tmp_account.balance) == 4) {
 
         // check if our Account array in the bank can hold the data
         if (bank->count >= bank->capacity) {

@@ -12,7 +12,7 @@
 typedef struct {
     int ID;
     char username[50];
-    char password[24];
+    char password[65];
     float balance;
 } Account;
 

@@ -23,3 +23,13 @@ void display_menu_account(char *username) {
     printf("=============================" );
     printf("\n");
 }
+
+void display_admin_menu() {
+    printf("\n========= 👑 ADMIN DASHBOARD =========\n");
+    printf("1. View Total Bank Liquidity (Total Money)\n");
+    printf("2. Search Account Details by ID\n");
+    printf("3. Delete / Close an Account\n");
+    printf("4. Show Total Registered Users\n");
+    printf("5. Log Out\n");
+    printf("=========================================\n");
+    }
