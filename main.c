@@ -146,7 +146,12 @@ void run_user_session_loop(Bank *bank, Account *user) {
                 deposit(user);
                 break;
 
-            case 4:
+            case 4: if (change_password(user)) {
+                        return;
+                    } 
+                    break;
+
+            case 5:
                 sleep(ONE_SECOND);
                 printf("Thank you for banking with us!\n");
                 // rewrite everything to the file when closing the app

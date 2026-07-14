@@ -19,7 +19,8 @@ void display_menu_account(char *username) {
     printf("1. Display balance\n");
     printf("2. Withdraw\n");
     printf("3. Deposit\n");
-    printf("4. Exit\n");
+    printf("4. Change Password\n");
+    printf("5. Exit\n");
     printf("=============================" );
     printf("\n");
 }

@@ -36,7 +36,7 @@ int create_account(Bank *bank) {
     char hashed_password[65] = {0};
     hash_password(password_ptr, hashed_password);
 
-    snprintf(message, sizeof(message), "Username: %s\nPassword: %s\n", username_ptr, password_ptr);
+    snprintf(message, sizeof(message), "| Username: %s\n| Password: %s\n", username_ptr, password_ptr);
 
     // check if there is space for the new account in bank
     if (bank->count >= bank->capacity) {
@@ -68,7 +68,9 @@ int create_account(Bank *bank) {
     snprintf(bank->accounts[idx].password, sizeof(bank->accounts[idx].password), "%s", hashed_password);
     
     // show the user their details
+    printf("====================================\n");
     printf("%s", message);
+    printf("====================================\n");
     printf("These are your Username and Password, memorise them and don't share them\n");
     sleep(ONE_SECOND);
     printf("Press any key to continue ");
