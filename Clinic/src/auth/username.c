@@ -1,5 +1,6 @@
 // import the header file
 #include "../../include/prototypes/auth/username.h"
+#include "../../include/prototypes/io.h"
 
 int handle_username(Patient_database* database, Patient** patient) {
     char username[65];
@@ -11,6 +12,7 @@ int handle_username(Patient_database* database, Patient** patient) {
 
         printf("Enter your Username: ");
         scanf("%64s", username);
+        flush_stdin();
 
         if (strcmp(username, "admin") == 0) {
             if (check_admin_login()) {

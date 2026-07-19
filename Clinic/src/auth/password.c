@@ -1,5 +1,6 @@
 // import the header file
 #include "../../include/prototypes/auth/password.h"
+#include "../../include/prototypes/io.h"
 
 int sign_in(char* account_password) {
     int attempts = 3, is_logged_in = 0;
@@ -12,6 +13,7 @@ int sign_in(char* account_password) {
 
         printf("Please Enter the account password: ");
         scanf("%64s", input_buffer);
+        flush_stdin();
 
         // check if the input text hashed equals the hash linked to the account
         hash_password(input_buffer, input_hash);
@@ -42,6 +44,7 @@ int check_admin_login() {
 
         printf("Please Enter the admin password: ");
         scanf("%64s", input_buffer);
+        flush_stdin();
 
         
         if (strcmp(input_buffer, "Admin@2026") == 0) {

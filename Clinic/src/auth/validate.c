@@ -1,5 +1,6 @@
 // import the header file
 #include "../../include/prototypes/auth/validate.h"
+#include "../../include/prototypes/io.h"
 
 void check_input_length(const char *display_prompt, const char *field_identifier, char **destination_buffer, int minimum_allowed_length, int maximum_allowed_length) {
     char input_buffer[256] = "";
@@ -10,17 +11,15 @@ void check_input_length(const char *display_prompt, const char *field_identifier
         printf("%s", display_prompt);
 
         if (scanf(" %255s", input_buffer) != 1) {
-            int extra_char;
-            while ((extra_char = getchar()) != '\n' && extra_char != EOF);
+            flush_stdin();
             
             printf("Invalid input. Please try again.\n");
             sleep(ONE_SECOND);
             continue;
         }
 
-        // Clean up the leftover newline manually so the NEXT loop turn is clean
-        int extra_char;
-        while ((extra_char = getchar()) != '\n' && extra_char != EOF);  
+        // Clean up the leftover newline
+        flush_stdin();
           
         int current_input_length = strlen(input_buffer);
 

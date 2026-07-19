@@ -1,13 +1,13 @@
 // import the header file
 #include "../../include/prototypes/auth/date.h"
+#include "../../include/prototypes/io.h"
 
 int is_leap_year(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
 void get_date(const char *prompt, char *dest_birthdate) {
-    int buffer_clear;
-    while ((buffer_clear = getchar()) != '\n' && buffer_clear != EOF);
+    flush_stdin();
 
     printf("%s (DD/MM/YYYY): ", prompt);
     fflush(stdout);
@@ -25,6 +25,7 @@ void get_time(const char* prompt, char* dest_time) {
 
         printf("%s (HH:MM): ", prompt);
         scanf("%s", input_buffer);
+        flush_stdin();
 
     } while (validate_time(input_buffer));
 
