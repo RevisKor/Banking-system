@@ -1,5 +1,6 @@
 // import header file
 #include "../include/prototypes/create_account.h"
+#include "../include/prototypes/io.h"
 
 void create_account(Patient_database* database) {
     char username[65] =  "";
@@ -71,8 +72,7 @@ void create_account(Patient_database* database) {
     printf("====================================\n");
     printf("These are your Username and Password. Memorize them and do not share them!\n\n");
     
-    int character_buffer;
-    while ((character_buffer = getchar()) != '\n' && character_buffer != EOF);
+    flush_stdin();
 
     printf("Press Enter to continue... ");
     getchar();
@@ -84,6 +84,7 @@ void get_gender(char* gender) {
     do {
         printf("What is yout gender? (M / F): ");
         scanf(" %c", &input_buffer);
+        flush_stdin();
 
     } while (input_buffer != 'M' && input_buffer != 'm' && input_buffer != 'F' && input_buffer != 'f');
 
