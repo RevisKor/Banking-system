@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> 
+#include <unistd.h>
+
 #include "account.h"
 #include "tools.h"
 #include "auth.h"

@@ -3,7 +3,7 @@
 
 void display_menu_login(int count) {
     if (count <= 1) {
-        printf("Hello and welcome to our Bank\n");
+        printf("Hello and welcome to our Clinic\n");
     }
     sleep(ONE_SECOND);
     printf("===== Account MANAGEMENT =====\n");
